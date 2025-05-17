@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts"
+    "generate": "prisma generate",
+    "dev": "npm run generate && tsx watch src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -11,12 +12,12 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.15.18",
-    "prisma": "^6.8.1",
+    "prisma": "^6.8.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.1",
-    "@prisma/client": "^6.8.1",
+    "@prisma/client": "^6.8.2",
     "fastify": "^5.3.3",
     "tsx": "^4.19.4"
   }
