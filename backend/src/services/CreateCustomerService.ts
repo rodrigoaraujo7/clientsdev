@@ -1,9 +1,5 @@
 import prismaClient from "../prisma";
-
-interface CreateCustomerProps {
-  name: string;
-  email: string;
-}
+import { CreateCustomerProps } from "../../types/Customer";
 
 class CreateCustomerService {
   async execute({ name, email }: CreateCustomerProps) {
