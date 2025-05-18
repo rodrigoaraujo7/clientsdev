@@ -11,7 +11,10 @@ app.setErrorHandler((error, request, reply) => {
 });
 
 const start = async () => {
-  await app.register(cors);
+  await app.register(cors, {
+    origin: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  });
   await app.register(routes);
 
   try {

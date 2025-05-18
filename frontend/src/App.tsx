@@ -22,12 +22,24 @@ function App() {
     e.preventDefault()
 
     try {
-      const response = await api.post<Client>("/customer", {
+      const response = await api.post("/customer", {
         name: inputNameValue,
         email: inputEmailValue
       })
 
-      setClients([...clients, response.data])
+      setClients(clients => [...clients, response.data])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const deleteClient = async (id: string) => {
+    try {
+      await api.delete("/customer", {
+        params: {
+          id
+        }
+      })
     } catch (error) {
       console.log(error)
     }
@@ -58,8 +70,8 @@ function App() {
       </form>
 
       <ul>
-        {clients.map((clients) => (
-          <li>{clients.name}</li>
+        {clients.map((client) => (
+          <li key={client.id} onClick={() => deleteClient(client.id)}>{client.name} - {client.id}</li>
         ))}
       </ul>
     </div>
