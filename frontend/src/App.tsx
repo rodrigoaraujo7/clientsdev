@@ -1,27 +1,26 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 import { api } from "./services/api"
 
 import type { Client } from "./types/Client"
+import { useClientContext } from "./context/ClientContext"
 
 function App() {
-  const [clients, setClients] = useState<Client[]>([])
+  const {
+    clients,
+    setClients,
+    loading,
+    setLoading
+  } = useClientContext()
+
   const [inputNameValue, setInputNameValue] = useState<string>("")
   const [inputEmailValue, setInputEmailValue] = useState<string>("")
-
-  const fetchClients = async () => {
-    try {
-      const response = await api.get("/customers")
-
-      setClients(response.data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
 
   const createClient = async (e: FormEvent) => {
     e.preventDefault()
 
     try {
+      setLoading(true)
+
       const response = await api.post("/customer", {
         name: inputNameValue,
         email: inputEmailValue
@@ -30,6 +29,8 @@ function App() {
       setClients(clients => [...clients, response.data])
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -48,10 +49,6 @@ function App() {
       console.log(error)
     }
   }
-
-  useEffect(() => {
-    fetchClients()
-  }, [])
 
   return (
     <div>
@@ -77,6 +74,8 @@ function App() {
         {clients.map((client) => (
           <li key={client.id} onClick={() => deleteClient(client.id)}>{client.name} - {client.id}</li>
         ))}
+
+        {loading && <h1>carregando ....</h1>}
       </ul>
     </div>
   )
