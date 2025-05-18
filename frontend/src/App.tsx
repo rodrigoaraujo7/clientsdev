@@ -1,28 +1,67 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import { api } from "./services/api"
 
+import type { Client } from "./types/Client"
+
 function App() {
-  const [data, setData] = useState<any[]>([])
+  const [clients, setClients] = useState<Client[]>([])
+  const [inputNameValue, setInputNameValue] = useState<string>("")
+  const [inputEmailValue, setInputEmailValue] = useState<string>("")
 
-  const fetch = async () => {
+  const fetchClients = async () => {
     try {
-      const fetch = await api.get("/customers")
+      const response = await api.get("/customers")
 
-      setData(fetch.data)
+      setClients(response.data)
     } catch (err) {
       console.log(err)
     }
   }
 
+  const createClient = async (e: FormEvent) => {
+    e.preventDefault()
+
+    try {
+      const response = await api.post<Client>("/customer", {
+        name: inputNameValue,
+        email: inputEmailValue
+      })
+
+      setClients([...clients, response.data])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
-    fetch()
+    fetchClients()
   }, [])
 
   return (
     <div>
-      {data.map((data) => (
-        <p>{data.name}</p>
-      ))}
+      <form onSubmit={createClient}>
+        <input
+          type="text"
+          placeholder="name"
+          name="name"
+          id="name"
+          value={inputNameValue} onChange={(e) => setInputNameValue(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="email"
+          name="email"
+          id="email"
+          value={inputEmailValue} onChange={(e) => setInputEmailValue(e.target.value)}
+        />
+        <button type="submit">Criar cliente</button>
+      </form>
+
+      <ul>
+        {clients.map((clients) => (
+          <li>{clients.name}</li>
+        ))}
+      </ul>
     </div>
   )
 }
