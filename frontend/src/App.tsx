@@ -40,6 +40,10 @@ function App() {
           id
         }
       })
+
+      const updatedClients: Client[] = clients.filter(client => client.id !== id)
+
+      setClients(updatedClients)
     } catch (error) {
       console.log(error)
     }
